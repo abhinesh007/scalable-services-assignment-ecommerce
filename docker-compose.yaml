@@ -1,0 +1,42 @@
+version: '3'
+services:
+  gateway:
+    container_name: api-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "product-service"
+      - "user-service"
+    networks:
+      - mynet
+  product-service:
+    container_name: product-service
+    build:
+      context: './product-service'
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8001:8001"
+    networks:
+      - mynet
+  user-service:
+    container_name: user-service
+    build:
+      context: './user-service'
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8002:8002"
+    networks:
+      - mynet
+    depends_on:
+      - product-service
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      driver: default
